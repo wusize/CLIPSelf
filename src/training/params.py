@@ -338,6 +338,12 @@ def parse_args(args):
         help="Use a pretrained CLIP model weights with the specified tag or file path.",
     )
     parser.add_argument(
+        "--pretrained-image",
+        default=False,
+        action='store_true',
+        help="Load imagenet pretrained weights for image tower backbone if available.",
+    )
+    parser.add_argument(
         "--lock-image",
         default=False,
         action='store_true',
