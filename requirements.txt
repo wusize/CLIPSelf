@@ -7,4 +7,4 @@ huggingface_hub
 sentencepiece
 protobuf<4
 timm
-git+https://github.com/cocodataset/panopticapi.git
+panopticapi@git+https://github.com/cocodataset/panopticapi.git

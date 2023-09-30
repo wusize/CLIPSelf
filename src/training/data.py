@@ -22,12 +22,6 @@ except:
     Client = None
 from open_clip.transform import ResizeLongest
 
-
-try:
-    import horovod.torch as hvd
-except ImportError:
-    hvd = None
-
 # import image transforms
 from torchvision.transforms import RandomHorizontalFlip, Compose
 from training.custom_transforms import CustomRandomResize, CustomRandomCrop
