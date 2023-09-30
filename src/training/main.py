@@ -260,9 +260,8 @@ def main(args):
 
     # determine if this worker should save logs and checkpoints. only do so if it is rank == 0
     args.save_logs = args.logs and args.logs.lower() != 'none' and is_master(args)
-    writer = None
     logging.info('Evaluate before training')
-
+    os.makedirs(args.checkpoint_path, exist_ok=True)
     if 'train' not in data:
         del dist_model
         evaluate(model, data, start_epoch, args)
