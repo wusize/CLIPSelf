@@ -137,7 +137,7 @@ def main(args):
     )
     args.input_size = model.visual.image_size
     if args.dataset_type in ['grid_distill', 'proposals_distill']:
-            method = CLIPSelf()
+        method = CLIPSelf()
     elif args.dataset_type == 'region_clip':
         method = RegionCLIP(args=args).to(device)
     else:

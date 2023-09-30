@@ -499,7 +499,7 @@ def get_coco_panoptic_dataset(args, preprocess_fn, is_train, epoch=0, tokenizer=
 
 def get_proposal_distill_dataset(args, preprocess_fn, is_train, epoch=0, tokenizer=None):
     assert is_train
-    input_filename = args.train_data # if is_train else args.val_data
+    input_filename = args.train_data  # if is_train else args.val_data
     assert input_filename
     dataset = ProposalDistillDataset(
         input_filename,
