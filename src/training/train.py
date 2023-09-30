@@ -187,7 +187,7 @@ def evaluate(model, data, epoch, args):
     logging.info(metrics)
 
     if args.save_logs:
-        with open(os.path.join(args.checkpoint_path, "results.jsonl"), "a+") as f:
+        with open(os.path.join(args.checkpoint_path, "results.json"), "a+") as f:
             f.write(json.dumps(metrics))
             f.write("\n")
 
