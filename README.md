@@ -11,7 +11,7 @@ This is an official release of the paper **CLIPSelf: Vision Transformer Distills
 ## TODO (Coming Soon)
 - [ ] Code and models of CLIPSelf.
 - [ ] CLIP models refined by CLIPSelf.
-- [ ] Support F-ViT under the OVDet repo using MMDetection3.x.
+- [ ] Support F-ViT under the [ovdet](https://github.com/wusize/ovdet) repo using MMDetection3.x.
 
 ## Installation
 
@@ -40,7 +40,7 @@ This project is released under the [Apache 2.0 license](LICENSE).
     title={CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction},
     author={Size Wu and Wenwei Zhang and Lumin Xu and Sheng Jin and and Xiangtai Li and Wentao Liu and Chen Change Loy},
     journal={arXiv preprint arXiv:2303.13495},
-    booktitle={CVPR},
+    year={2023}
 }
 ```
 
