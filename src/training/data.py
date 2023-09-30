@@ -533,8 +533,7 @@ def get_grid_distill_dataset(args, preprocess_fn, is_train, epoch=0, tokenizer=N
     assert is_train
     input_filename = args.train_data
     assert input_filename
-    datasetname = GridDistillDatasetWithImageNet if args.imagenet_length > 0 else GridDistillDataset
-    dataset = datasetname(
+    dataset = GridDistillDataset(
         input_filename=input_filename,
         transforms=preprocess_fn,
         image_root=args.train_image_root,
