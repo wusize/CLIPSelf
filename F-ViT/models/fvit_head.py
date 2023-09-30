@@ -93,7 +93,7 @@ class FViTBBoxHead(ConvFCBBoxHead):
                 x_cls = self.avg_pool(x_cls)
             x_cls = x_cls.flatten(1)
         for fc in self.cls_fcs:
-            x_cls = self.relu(fc(x_cls))
+            x_cls = self.relu(fc(x_cls))  # FIXME: should discard the last relu
 
         for conv in self.reg_convs:
             x_reg = conv(x_reg)
