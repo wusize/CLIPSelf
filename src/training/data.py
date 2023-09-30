@@ -13,9 +13,9 @@ from open_clip.transform import get_scale
 from pycocotools.coco import COCO
 from training.coco_api import COCOPanoptic
 from panopticapi import utils
-import mmcv
+# import mmcv
 import io
-from mmengine.fileio import get
+# from mmengine.fileio import get
 try:
     from petrel_client.client import Client
 except:
@@ -323,10 +323,14 @@ class COCOPanopticDataset(Dataset):
 
     @staticmethod
     def _load_segm(segm_path):
-        img_bytes = get(segm_path)
-        pan_png = mmcv.imfrombytes(
-            img_bytes, flag='color', channel_order='rgb').squeeze()
-        segm_map = utils.rgb2id(pan_png)
+        segmentation = np.array(
+            Image.open(segm_path),
+            dtype=np.uint8
+        )
+        # img_bytes = get(segm_path)
+        # pan_png = mmcv.imfrombytes(
+        #     img_bytes, flag='color', channel_order='rgb').squeeze()
+        segm_map = utils.rgb2id(segmentation)
 
         return segm_map
 

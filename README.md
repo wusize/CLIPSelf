@@ -10,7 +10,7 @@ This is an official release of the paper **CLIPSelf: Vision Transformer Distills
 
 ## TODO (Coming Soon)
 - [ ] Code and models of CLIPSelf.
-- [ ] CLIP models refined by CLIPSelf.
+- [ ] Code and models of F-ViT.
 - [ ] Support F-ViT under the [ovdet](https://github.com/wusize/ovdet) repo using MMDetection3.x.
 
 ## Installation
