@@ -21,6 +21,11 @@ following command to install the package
 ```bash
 pip install -e. -v
 ```
+## Train CLIPSelf
+
+## Evaluate CLIPSelf
+
+## F-ViT
 
 
 ## License

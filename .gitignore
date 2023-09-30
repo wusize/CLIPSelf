@@ -1,6 +1,5 @@
 logs/
 wandb/
-models/
 features/
 results/
 
