@@ -35,6 +35,10 @@ def parse_args(args):
         type=int,
         default=20)
     parser.add_argument(
+        "--downsample-factor",
+        type=int,
+        default=16)
+    parser.add_argument(
         "--alpha",
         type=float,
         default=2.0,    # not used when alpha >=1.0
