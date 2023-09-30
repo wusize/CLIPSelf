@@ -292,7 +292,7 @@ def main(args):
                     output_dict=True,
                     cache_dir=args.cache_dir)
                 teacher_state_dict = dist_model.state_dict()
-                del dist_model
+                dist_model = None
             target_state_dict = student_teacher_ensemble(student_state_dict, teacher_state_dict, args.alpha)
         else:
             target_state_dict = student_state_dict
