@@ -221,4 +221,3 @@ lr_config = dict(
 runner = dict(type='EpochBasedRunner', max_epochs=3)
 fp16 = dict(loss_scale=512.0)
 auto_resume = False
-gpu_ids = range(0, 8)
