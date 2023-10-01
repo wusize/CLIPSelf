@@ -7,7 +7,7 @@ model = dict(
             num_classes=num_classes,
             fixed_temperature=50.0,
             vlm_temperature=120.0,
-            alpha=0.3,
+            alpha=0.2,
             class_embed=
             'datasets/embeddings/voc_transfer_background_evaclip_vitl14x336.pt',
             seen_classes='datasets/voc_classes.json',
