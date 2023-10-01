@@ -9,9 +9,9 @@ This is an official release of the paper **CLIPSelf: Vision Transformer Distills
 > [[project page(TBD)](https://www.mmlab-ntu.com/)][[Bibetex](https://github.com/wusize/CLIPSelf#citation)]
 
 ## TODO
-- [x] Code and models of CLIPSelf.
-- [x] Code and models of F-ViT.
-- [ ] Support F-ViT under the [ovdet](https://github.com/wusize/ovdet) repo using MMDetection3.x.
+- [x] Code and models of CLIPSelf
+- [x] Code and models of F-ViT
+- [ ] Support F-ViT under the [ovdet](https://github.com/wusize/ovdet) repo using MMDetection3.x
 
 ## Installation
 
