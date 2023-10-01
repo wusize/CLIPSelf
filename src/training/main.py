@@ -12,7 +12,7 @@ import numpy as np
 import torch
 from torch import optim
 from torch.cuda.amp import GradScaler
-from open_clip import create_model_and_transforms, get_tokenizer
+from open_clip import create_model_and_transforms, get_tokenizer, create_model
 from training.data import get_data
 from training.distributed import is_master, init_distributed_device, broadcast_object
 from training.logger import setup_logging
@@ -147,7 +147,7 @@ def main(args):
         dist_model = None
     else:
         logging.info(f"{args.dataset_type}, use dist_model")
-        dist_model, _, _ = create_model_and_transforms(
+        dist_model = create_model(
             args.model,  # same !
             args.pretrained,
             device=device,
@@ -181,7 +181,7 @@ def main(args):
     if args.distributed:
         if args.use_bn_sync:
             model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
-        ddp_args = {}  #  {"find_unused_parameters": True}
+        ddp_args = {}   # {"find_unused_parameters": True}
         if args.ddp_static_graph:
             # this doesn't exist in older PyTorch, arg only added if enabled
             ddp_args['static_graph'] = True
@@ -284,7 +284,7 @@ def main(args):
                 teacher_state_dict = dist_model.module.state_dict() \
                     if args.distributed else dist_model.state_dict()
             else:
-                dist_model, _, _ = create_model_and_transforms(
+                dist_model = create_model(
                     args.model,
                     args.pretrained,
                     device=device,
@@ -328,15 +328,18 @@ def main(args):
                 os.replace(tmp_save_path, latest_save_path)
 
         if completed_epoch % args.zeroshot_frequency == 0:
+            test_model = create_model(
+                args.model,
+                args.pretrained,
+                device=device,
+                precision=args.precision,
+                output_dict=True,
+                cache_dir=args.cache_dir)
+            test_model.load_state_dict(target_state_dict)
             if args.distributed:
-                model.module.load_state_dict(target_state_dict)
-            else:
-                model.load_state_dict(target_state_dict)
-            evaluate(model, data, completed_epoch, args)
-            if args.distributed:
-                model.module.load_state_dict(student_state_dict)
-            else:
-                model.load_state_dict(student_state_dict)
+                test_model = torch.nn.parallel.DistributedDataParallel(test_model, device_ids=[device], **ddp_args)
+            evaluate(test_model, data, completed_epoch, args)
+            del test_model
 
 
 if __name__ == "__main__":
