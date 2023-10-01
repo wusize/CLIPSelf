@@ -118,7 +118,7 @@ This project is released under the [Apache 2.0 license](LICENSE).
 ```bibtex
 @article{wu2023clipself,
     title={CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction},
-    author={Size Wu and Wenwei Zhang and Lumin Xu and Sheng Jin and and Xiangtai Li and Wentao Liu and Chen Change Loy},
+    author={Size Wu and Wenwei Zhang and Lumin Xu and Sheng Jin and Xiangtai Li and Wentao Liu and Chen Change Loy},
     journal={arXiv preprint arXiv:2310.xxxxx},
     year={2023}
 }
