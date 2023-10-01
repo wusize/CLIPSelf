@@ -77,11 +77,11 @@ The detectors on OV-COCO are summarized as follows:
 |  #  | Backbone | CLIP Refinement | Proposals | AP50 |                                           Config                                           | Checkpoint |
 |:---:|:--------:|:---------------:|:---------:|:----:|:------------------------------------------------------------------------------------------:|:----------:|
 |  1  | ViT-B/16 |    CLIPSelf     |     -     | 33.6 |   [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model]()  |
-|  2  | ViT-B/16 |    CLIPSelf     |     +     | 34.4 |  [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model]()  |
-|  3  | ViT-B/16 |   RegionCLIP    |     +     | 37.6 |      [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model]()  |
+|  2  | ViT-B/16 |    CLIPSelf     |     +     | 37.6 |  [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model]()  |
+|  3  | ViT-B/16 |   RegionCLIP    |     +     | 34.4 |      [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model]()  |
 |  4  | ViT-L/14 |    CLIPSelf     |     -     | 38.4 |   [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model]()  |
-|  5  | ViT-L/14 |    CLIPSelf     |     +     | 38.7 |  [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model]()  |
-|  6  | ViT-L/14 |   RegionCLIP    |     +     | 44.3 |      [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model]()  |
+|  5  | ViT-L/14 |    CLIPSelf     |     +     | 44.3 |  [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model]()  |
+|  6  | ViT-L/14 |   RegionCLIP    |     +     | 38.7 |      [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model]()  |
 
 
 The detectors on OV-LVIS are summarized as follows:
