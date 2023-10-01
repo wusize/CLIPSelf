@@ -1,3 +1,4 @@
+find_unused_parameters=True
 num_classes = 65
 class_weight = [
     1.0, 1.0, 1.0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 0, 1.0, 1.0, 0, 0,

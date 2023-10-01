@@ -1,5 +1,5 @@
 from mmdet.models.builder import DETECTORS
-from mmdet.models.detectors import TwoStageDetector, RPN
+from mmdet.models.detectors import TwoStageDetector
 
 
 @DETECTORS.register_module()
