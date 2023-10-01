@@ -50,7 +50,7 @@ CLIPSelf/
 
 ## Run
 ### Original Models 
-To run the training and testing, first obtain the original models from 
+To run CLIPSelf, first obtain the original models from 
 [EVA-02-CLIP](https://github.com/baaivision/EVA/tree/master/EVA-CLIP), and put them under 
 `checkpoints/` like the following:
 
@@ -62,8 +62,8 @@ CLIPSelf/
     
 ```
 
-### Models 
-We provide the scripts to train CLIPSelf and RegionCLIP under `scripts`, they are summarized as follows:
+### Training and Testing 
+We provide the scripts to train CLIPSelf and RegionCLIP under [scripts/](scripts), they are summarized as follows:
 
 |  #  |       Model       |   Method   | Proposals | Training Data |                                Script                                | Checkpoint |
 |:---:|:-----------------:|:----------:|:---------:|:-------------:|:--------------------------------------------------------------------:|:----------:|
