@@ -141,7 +141,7 @@ bash dist_test.sh configs/transfer/fvit_vitl14_upsample_fpn_transfer2objects365v
 
 
 ## Train
-Prepare the checkpoints as shown in the [previois section](#clipself-checkpoints).
+Prepare the checkpoints as shown in the [previous section](#clipself-checkpoints).
 An example of training on OV-COCO:
 
 ```bash
