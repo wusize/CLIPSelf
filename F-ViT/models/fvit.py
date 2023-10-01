@@ -46,9 +46,6 @@ class FViT(TwoStageDetector):
         else:
             x = res_feats[:-1]
 
-        if not self.use_res_feature:
-            res_feats = None
-
         losses = dict()
 
         # RPN forward and loss
