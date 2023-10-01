@@ -155,7 +155,7 @@ bash dist_test.sh configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_cl
                   8 --work-dir your/working/directory
 ```
 
-To use multiple machines (e.g., 16 GPUs) to expedite the training on OV-LVIS, refer to the tutorial of 
+To use multiple machines (e.g., 2x8=16 GPUs) to expedite the training on OV-LVIS, refer to the tutorial of 
 [MMDetection](https://mmdetection.readthedocs.io/en/latest/user_guides/train.html). We have set 
 `auto_scale_lr = dict(enable=True, base_batch_size=64)` in the config files, so the learning rate will be
 modified automatically.
