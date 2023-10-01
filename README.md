@@ -1,5 +1,5 @@
 # CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction
-
+![](clipself_method.jpg)
 ## Introduction
 
 This is an official release of the paper **CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction**.
