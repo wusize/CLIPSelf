@@ -30,8 +30,6 @@ class CocoDatasetOV(CocoDataset):
     def __init__(self,
                  ann_file,
                  pipeline,
-                 caption_file=None,
-                 clip_bbox_embed=None,
                  seen_classes='datasets/mscoco_seen_classes.json',
                  unseen_classes='datasets/mscoco_unseen_classes.json',
                  all_classes='datasets/mscoco_65_classes.json',
@@ -43,14 +41,6 @@ class CocoDatasetOV(CocoDataset):
         self.all_classes = json.load(open(all_classes))
         self.PALETTE = [(255, 0, 0) if cls in self.unseen_classes else (0, 0, 255) for cls in self.all_classes]
         self.CLASSES = self.all_classes
-
-        # ann_id2clip_embed
-        self.bbox_embed = torch.load(clip_bbox_embed) if clip_bbox_embed != None else None
-        if caption_file is not None:
-            self.coco_caption = COCO(caption_file)
-        else:
-            self.coco_caption = None
-
         # self.CLASSES = seen_classes
 
     def get_ann_info(self, idx):
@@ -69,13 +59,6 @@ class CocoDatasetOV(CocoDataset):
 
         data_info = self._parse_ann_info(self.data_infos[idx], ann_info)
 
-        if self.coco_caption is not None:
-            caption_ann_ids = self.coco_caption.get_ann_ids(img_ids=[img_id])
-            caption_ann_info = self.coco_caption.load_anns(caption_ann_ids)
-            # During training, randomly choose a caption as gt.
-            # random_idx = np.random.randint(0, len(caption_ann_info))
-            captions = [ann['caption'] for ann in caption_ann_info]
-            data_info['captions'] = captions
         return data_info
     
     def _parse_ann_info(self, img_info, ann_info):
@@ -94,7 +77,6 @@ class CocoDatasetOV(CocoDataset):
         gt_labels = []
         gt_bboxes_ignore = []
         gt_masks_ann = []
-        gt_embeds = []
         for i, ann in enumerate(ann_info):
             if ann.get('ignore', False):
                 continue
@@ -114,13 +96,6 @@ class CocoDatasetOV(CocoDataset):
                 gt_bboxes.append(bbox)
                 gt_labels.append(self.cat2label[ann['category_id']])
                 gt_masks_ann.append(ann.get('segmentation', None))
-            if self.bbox_embed is not None:
-                gt_embeds.append(self.bbox_embed[ann['id']])
-        
-        if gt_embeds:
-            gt_embeds = np.array(torch.stack(gt_embeds, dim=0), dtype=np.float32)
-        else:
-            gt_embeds = np.array((0,1024), dtype=np.float32)
 
         if gt_bboxes:
             gt_bboxes = np.array(gt_bboxes, dtype=np.float32)
@@ -139,7 +114,6 @@ class CocoDatasetOV(CocoDataset):
         ann = dict(
             bboxes=gt_bboxes,
             labels=gt_labels,
-            embeds=gt_embeds,
             bboxes_ignore=gt_bboxes_ignore,
             masks=gt_masks_ann,
             seg_map=seg_map)
@@ -205,8 +179,6 @@ class CocoDatasetOV(CocoDataset):
         if tmp_dir is not None:
             tmp_dir.cleanup()
         return eval_results
-
-
 
     def evaluate_det_segm(self,
                           results,
@@ -433,9 +405,6 @@ class CocoDatasetOV(CocoDataset):
                     f'{ap[4]:.3f} {ap[5]:.3f}')
 
         return eval_results
-
-        
-
 
     def __repr__(self):
         pass

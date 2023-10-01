@@ -6,12 +6,12 @@ The detection framework is built upon MMDetection2.x. To install MMDetection2.x,
 cd ~/your/project/directory
 git clone https://github.com/open-mmlab/mmcv.git
 cd mmcv
-git checkout v1.5.0
+git checkout v1.7.0
 MMCV_WITH_OPS=1 pip install -e . -v
 cd ..
 git clone https://github.com/open-mmlab/mmdetection.git
 cd mmdetection
-git checkout 2.x
+git checkout v2.28.1
 pip install -e . -v
 ```
 For other installation methods, please refer to the official website of 
