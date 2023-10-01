@@ -29,4 +29,4 @@ data = dict(
         ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
         img_prefix=data_root + 'VOC2007/')
 )
-evaluation = dict(interval=1, metric='bbox')
+evaluation = dict(interval=1, metric='mAP', iou_thr=[0.5, 0.75])
