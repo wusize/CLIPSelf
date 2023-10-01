@@ -35,7 +35,7 @@ model = dict(
         num_convs=2,
         norm_cfg=head_norm_cfg),
     roi_head=dict(
-        type='FvlmRoIHead',
+        type='FViTRoIHead',
         bbox_roi_extractor=dict(
             type='SingleRoIExtractor',
             roi_layer=dict(type='RoIAlign', output_size=7, sampling_ratio=0),
