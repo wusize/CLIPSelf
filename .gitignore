@@ -4,7 +4,6 @@ features/
 results/
 
 tests/data/
-*.pt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
