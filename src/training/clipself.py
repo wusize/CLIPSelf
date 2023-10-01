@@ -43,7 +43,7 @@ class CLIPSelf:
         normed_teacher_features = F.normalize(teacher_crop_features, dim=-1)
 
         loss_cosine = 1.0 - (normed_student_features *
-                                 normed_teacher_features).sum(-1).mean()
+                             normed_teacher_features).sum(-1).mean()
         losses = dict(loss_cosine=loss_cosine*args.cosine_weight)
 
         return losses, len(images), model.logit_scale.exp()

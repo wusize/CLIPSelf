@@ -146,11 +146,6 @@ def parse_args(args):
         default=1.0,
     )
     parser.add_argument(
-        "--mosaic-proportion",
-        type=float,
-        default=1.0,
-    )
-    parser.add_argument(
         "--det-image-size",
         type=int,
         default=1024,
@@ -210,7 +205,7 @@ def parse_args(args):
     parser.add_argument(
         "--train-embed-path",
         type=str,
-        default="metadata/coco_nouns_4764_clip_hand_craft_ViTB16.npy",
+        default="",
     )
     parser.add_argument(
         "--del-dist-model",
