@@ -19,10 +19,145 @@ For other installation methods, please refer to the official website of
 
 ## Data
 
-## Checkpoints
+## Data Preparation
+The main experiments are conducted using images from [COCO](https://cocodataset.org/#home) 
+and [LVIS](https://www.lvisdataset.org/) datasets. We also perform transfer evaluation on 
+[Objects365v1](https://www.objects365.org/overview.html). 
+Please prepare datasets and organize them like the 
+following:
+
+
+```text
+CLIPSelf/F-ViT
+├── data         # use soft link to save storage on the disk
+    ├── coco
+        ├── annotations
+            ├── instances_val2017.json       # for transfer evaluation
+        ├── train2017
+        ├── val2017
+        ├── zero-shot         # obtain the files from the drive 
+            ├── instances_val2017_all_2.json
+            ├── instances_train2017_seen_2_65_cat.json
+    ├── lvis_v1
+        ├── annotations
+            ├── lvis_v1_train_seen_1203_cat.json  # obtain the files from the drive 
+            ├── lvis_v1_val.json 
+        ├── train2017    # the same with coco
+        ├── val2017      # the same with coco
+    ├── Objects365v1
+        ├── objects365_reorder_val.json         # obtain the files from the drive 
+        ├── val
+    
+```
+For open-vocabulary detection, we provide some processed json files in 
+[Google Drive](https://drive.google.com/drive/folders/1kFkNmD7Dp3y7jZzPBKdS8dcvqzGWFxXg?usp=sharing).
+Put `instances_val2017_all_2.json` and `instances_train2017_seen_2_65_cat.json` under `data/coco/zero-shot/`, 
+`lvis_v1_train_seen_1203_cat.json` under `data/lvis_v1/annotations/`, and `objects365_reorder_val.json` under 
+`data/Objects365v1/`.
+
+
+## CLIPSelf Checkpoints
+Obtain the checkpoints from [Drive](). And they can be organized as follows:
+
+```text
+CLIPSelf/FViT/  
+├── checkpoints  # use soft link to save storage on the disk
+    ├── eva_vitb16_coco_clipself_patches.pt     # 1
+    ├── eva_vitb16_coco_clipself_proposals.pt   # 2
+    ├── eva_vitb16_coco_regionclip.pt           # 3
+    ├── eva_vitl14_coco_clipself_patches.pt     # 4
+    ├── eva_vitl14_coco_clipself_proposals.pt   # 5
+    ├── eva_vitl14_coco_regionclip.pt           # 6
+    ├── eva_vitb16_lvis_clipself_patches.pt     # 7
+    ├── eva_vitl14_lvis_clipself_patches.pt     # 8
+```
+
+## Detectors 
+
+The detectors on OV-COCO are summarized as follows:
+
+|  #  | Backbone | CLIP Refinement | Proposals | AP50 |                                           Config                                           | Checkpoint |
+|:---:|:--------:|:---------------:|:---------:|:----:|:------------------------------------------------------------------------------------------:|:----------:|
+|  1  | ViT-B/16 |    CLIPSelf     |     -     | 33.6 |   [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model]()  |
+|  2  | ViT-B/16 |    CLIPSelf     |     +     | 34.4 |  [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model]()  |
+|  3  | ViT-B/16 |   RegionCLIP    |     +     | 37.6 |      [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model]()  |
+|  4  | ViT-L/14 |    CLIPSelf     |     -     | 38.4 |   [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model]()  |
+|  5  | ViT-L/14 |    CLIPSelf     |     +     | 38.7 |  [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model]()  |
+|  6  | ViT-L/14 |   RegionCLIP    |     +     | 44.3 |      [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model]()  |
+
+
+The detectors on OV-LVIS are summarized as follows:
+
+
+|  #  | Backbone | CLIP Refinement | Proposals | mAPr |                                         Config                                         | Checkpoint |
+|:---:|:--------:|:---------------:|:---------:|:----:|:--------------------------------------------------------------------------------------:|:----------:|
+|  7  | ViT-B/16 |    CLIPSelf     |     -     | 25.3 | [cfg](configs/ov_lvis/fvit_vitb16_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py) | [model]()  |
+|  8  | ViT-L/14 |    CLIPSelf     |     -     | 34.9 | [cfg](configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py) | [model]()  |
+
 
 ## Test 
-We provide the checkpoints of the object detectors.
+We provide the checkpoints of the object detectors in [Drive](). And they can be organized as follows:
+
+```text
+CLIPSelf/FViT/  
+├── checkpoints  # use soft link to save storage on the disk
+    ├── fvit_eva_vitb16_ovcoco_clipself_patches.pth     # 1
+    ├── fvit_eva_vitb16_ovcoco_clipself_proposals.pth   # 2
+    ├── fvit_eva_vitb16_ovcoco_regionclip.pth           # 3
+    ├── fvit_eva_vitb16_ovlvis_clipself_patches.pth     # 4
+    ├── fvit_eva_vitl14_ovcoco_clipself_patches.pth     # 5
+    ├── fvit_eva_vitl14_ovcoco_clipself_proposals.pth   # 6
+    ├── fvit_eva_vitl14_ovcoco_regionclip.pth           # 7
+    ├── fvit_eva_vitl14_ovlvis_clipself_patches.pth     # 8
+```
+
+An example of evaluation on OV-COCO
+```bash
+bash dist_test.sh configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py \
+     checkpoints/fvit_eva_vitb16_ovcoco_clipself_proposals.pth  8  \
+     --work-dir your/working/directory --eval bbox
+```
+
+An example of evaluation on OV-LVIS
+```bash
+bash dist_test.sh configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py \
+     checkpoints/fvit_eva_vitl14_ovlvis_clipself_patches.pth   8  \
+     --work-dir your/working/directory --eval segm
+```
+
+
+## Transfer
+Transfer evaluation on COCO:
+```bash
+bash dist_test.sh configs/transfer/fvit_vitl14_upsample_fpn_transfer2coco.py \
+     checkpoints/fvit_eva_vitl14_ovlvis_clipself_patches.pth  8  \
+     --work-dir your/working/directory --eval bbox
+```
+
+Transfer evaluation on Objects365v1:
+```bash
+bash dist_test.sh configs/transfer/fvit_vitl14_upsample_fpn_transfer2objects365v1.py \
+     checkpoints/fvit_eva_vitl14_ovlvis_clipself_patches.pth   8  \
+     --work-dir your/working/directory --eval bbox
+```
+
 
 ## Train
-We provide the checkpoints of EVA-CLIP ViTs that are refined by CLIPSelf.
+Prepare the checkpoints as shown in the [previois section](#clipself-checkpoints).
+An example of training on OV-COCO:
+
+```bash
+bash dist_test.sh  configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py \
+                   8 --work-dir your/working/directory
+```
+
+An example of training on OV-LVIS
+```bash
+bash dist_test.sh configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py \
+                  8 --work-dir your/working/directory
+```
+
+To use multiple machines (e.g., 16 GPUs) to expedite the training on OV-LVIS, refer to the tutorial of 
+[MMDetection](https://mmdetection.readthedocs.io/en/latest/user_guides/train.html). We have set 
+`auto_scale_lr = dict(enable=True, base_batch_size=64)` in the config files, so the learning rate will be
+modified automatically.

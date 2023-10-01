@@ -65,12 +65,12 @@ classes = ('person', 'sneakers', 'chair', 'hat', 'lamp', 'bottle', 'cabinet/shel
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 image_size = (896, 896)
-file_client_args = dict(
-    backend='petrel',
-    path_mapping=dict({
-        'data/Objects365v1/val': 'openmmlab:s3://openmmlab/datasets/detection/Objects365/val',
-    }))
-# file_client_args = dict(backend='disk')
+# file_client_args = dict(
+#     backend='petrel',
+#     path_mapping=dict({
+#         'data/Objects365v1/val': 'openmmlab:s3://openmmlab/datasets/detection/Objects365/val',
+#     }))
+file_client_args = dict(backend='disk')
 test_pipeline = [
     dict(type='LoadImageFromFile', file_client_args=file_client_args),
     dict(
