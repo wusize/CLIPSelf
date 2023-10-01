@@ -1,6 +1,6 @@
 # F-ViT: Build Open-Vocabulary Object Detectors Upon Frozen CLIP ViTs
 ## Requirements
-The detection framework is built upon MMDetection2.x. To install MMDetection2.x, run
+The detection framework is built upon [MMDetection2.x](https://github.com/open-mmlab/mmdetection/tree/v2.28.1). To install MMDetection2.x, run
 
 ```bash
 cd ~/your/project/directory
