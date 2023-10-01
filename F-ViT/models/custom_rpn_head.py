@@ -10,8 +10,8 @@ class CustomRPNHead(RPNHead):
                  norm_cfg=None,
                  *args,
                  **kwargs):
-        super().__init__(*args, **kwargs)
         self.norm_cfg = norm_cfg
+        super().__init__(*args, **kwargs)
 
     def _init_layers(self):
         """Initialize layers of the head."""
