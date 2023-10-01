@@ -70,7 +70,7 @@ file_client_args = dict(
     path_mapping=dict({
         'data/Objects365v1/val': 'openmmlab:s3://openmmlab/datasets/detection/Objects365/val',
     }))
-
+# file_client_args = dict(backend='disk')
 test_pipeline = [
     dict(type='LoadImageFromFile', file_client_args=file_client_args),
     dict(

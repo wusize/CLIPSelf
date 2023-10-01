@@ -7,7 +7,7 @@ model = dict(
             num_classes=num_classes,
             fixed_temperature=50.0,
             vlm_temperature=120.0,
-            alpha=0.2,
+            alpha=0.3,
             class_embed=
             'datasets/embeddings/coco_transfer_background_evaclip_vitl14x336.pt',
             seen_classes='datasets/mscoco_all_classes.json',
