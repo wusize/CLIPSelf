@@ -17,10 +17,8 @@ pip install -e . -v
 For other installation methods, please refer to the official website of 
 [MMCV](https://github.com/open-mmlab/mmcv.git) and [MMDetection](https://github.com/open-mmlab/mmdetection.git).
 
-## Data
-
 ## Data Preparation
-The main experiments are conducted using images from [COCO](https://cocodataset.org/#home) 
+The main experiments are conducted on [COCO](https://cocodataset.org/#home) 
 and [LVIS](https://www.lvisdataset.org/) datasets. We also perform transfer evaluation on 
 [Objects365v1](https://www.objects365.org/overview.html). 
 Please prepare datasets and organize them like the 

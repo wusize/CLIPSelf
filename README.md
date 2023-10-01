@@ -8,7 +8,7 @@ This is an official release of the paper **CLIPSelf: Vision Transformer Distills
 > Size Wu, Wenwei Zhang, Lumin Xu, Sheng Jin, Xiangtai Li, Wentao Liu, Chen Change Loy            
 > [[project page(TBD)](https://www.mmlab-ntu.com/)][[Bibetex](https://github.com/wusize/CLIPSelf#citation)]
 
-## TODO (Coming Soon)
+## TODO
 - [x] Code and models of CLIPSelf.
 - [x] Code and models of F-ViT.
 - [ ] Support F-ViT under the [ovdet](https://github.com/wusize/ovdet) repo using MMDetection3.x.
