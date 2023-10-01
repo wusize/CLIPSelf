@@ -1,4 +1,5 @@
-find_unused_parameters=True
+find_unused_parameters = True
+norm_cfg = dict(type='SyncBN', requires_grad=True)
 num_classes = 65
 class_weight = [
     1.0, 1.0, 1.0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 0, 1.0, 1.0, 0, 0,
@@ -6,18 +7,17 @@ class_weight = [
     0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 1.0, 0, 1.0, 1.0,
     1.0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 1.0, 0, 1.0, 0.2
 ]
-norm_cfg = dict(type='SyncBN', requires_grad=True)
 model = dict(
     type='FViT',
     backbone=dict(
         type='EvaCLIPViT',
-        model_name='EVA02-CLIP-B-16',
-        pretrained='checkpoints/EVA02_CLIP_B_psz16_s8B.pt',
         norm_cfg=norm_cfg,
-        out_indices=[3, 5, 7, 11]),
+        out_indices=[6, 10, 14, 23],
+        model_name='EVA02-CLIP-L-14-336',
+        pretrained='checkpoints/EVA02_CLIP_L_336_psz14_s6B.pt'),
     neck=dict(
         type='FPN',
-        in_channels=[768, 768, 768, 768],
+        in_channels=[1024, 1024, 1024, 1024],
         out_channels=256,
         num_outs=5,
         norm_cfg=norm_cfg),
@@ -29,7 +29,7 @@ model = dict(
             type='AnchorGenerator',
             scales=[8],
             ratios=[0.5, 1.0, 2.0],
-            strides=[4, 8, 16, 32, 64]),
+            strides=[3.5, 7, 14, 28, 56]),
         bbox_coder=dict(
             type='DeltaXYWHBBoxCoder',
             target_means=[0.0, 0.0, 0.0, 0.0],
@@ -44,11 +44,11 @@ model = dict(
             type='SingleRoIExtractor',
             roi_layer=dict(type='RoIAlign', output_size=7, sampling_ratio=0),
             out_channels=256,
-            featmap_strides=[4, 8, 16, 32]),
+            featmap_strides=[3.5, 7, 14, 28]),
         bbox_head=dict(
             type='FViTBBoxHead',
             in_channels=256,
-            fc_out_channels=512,
+            fc_out_channels=768,
             roi_feat_size=7,
             num_classes=num_classes,
             bbox_coder=dict(
@@ -63,13 +63,12 @@ model = dict(
                 class_weight=class_weight),
             loss_bbox=dict(type='L1Loss', loss_weight=1.0),
             norm_cfg=norm_cfg,
-            fixed_temperature=0,
             learned_temperature=50.0,
             vlm_temperature=75.0,
             alpha=0.1,
             beta=0.8,
             class_embed=
-            'datasets/embeddings/coco_with_background_evaclip_vitb_16.pt',
+            'datasets/embeddings/coco_with_background_evaclip_vitl14x336.pt',
             seen_classes='datasets/mscoco_seen_classes.json',
             all_classes='datasets/mscoco_65_classes.json',
             num_shared_convs=4,
@@ -83,8 +82,8 @@ model = dict(
                 output_size=1,
                 sampling_ratio=0,
                 use_torchvision=True),
-            out_channels=512,
-            featmap_strides=[16])),
+            out_channels=768,
+            featmap_strides=[14])),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
@@ -144,11 +143,10 @@ workflow = [('train', 1)]
 opencv_num_threads = 0
 mp_start_method = 'fork'
 auto_scale_lr = dict(enable=True, base_batch_size=64)
-dataset_type = 'CocoDatasetOV'
-image_size = (640, 640)
+image_size = (896, 896)
 file_client_args = dict(backend='disk')
 train_pipeline = [
-    dict(type='LoadImageFromFile', file_client_args=file_client_args),
+    dict(type='LoadImageFromFile', file_client_args=dict(backend='disk')),
     dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
     dict(
         type='Resize',
@@ -174,7 +172,7 @@ train_pipeline = [
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
 ]
 test_pipeline = [
-    dict(type='LoadImageFromFile', file_client_args=file_client_args),
+    dict(type='LoadImageFromFile', file_client_args=dict(backend='disk')),
     dict(
         type='MultiScaleFlipAug',
         img_scale=image_size,
@@ -196,18 +194,17 @@ data = dict(
     samples_per_gpu=8,
     workers_per_gpu=8,
     train=dict(
-        type=dataset_type,
-        ann_file=
-        'data/coco/zero-shot/instances_train2017_seen_2_65_cat.json',
+        type='CocoDatasetOV',
+        ann_file='data/coco/zero-shot/instances_train2017_seen_2_65_cat.json',
         img_prefix='data/coco/train2017/',
         pipeline=train_pipeline),
     val=dict(
-        type=dataset_type,
+        type='CocoDatasetOV',
         ann_file='data/coco/zero-shot/instances_val2017_all_2.json',
         img_prefix='data/coco/val2017/',
         pipeline=test_pipeline),
     test=dict(
-        type=dataset_type,
+        type='CocoDatasetOV',
         ann_file='data/coco/zero-shot/instances_val2017_all_2.json',
         img_prefix='data/coco/val2017/',
         pipeline=test_pipeline)

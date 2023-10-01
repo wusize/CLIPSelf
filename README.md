@@ -19,7 +19,7 @@ This project is adapted from [OpenCLIP-v2.16.0](https://github.com/mlfoundations
 following command to install the package
 
 ```bash
-pip install -e. -v
+pip install -e . -v
 ```
 ## Train CLIPSelf
 
@@ -39,7 +39,7 @@ This project is released under the [Apache 2.0 license](LICENSE).
 @article{wu2023clipself,
     title={CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction},
     author={Size Wu and Wenwei Zhang and Lumin Xu and Sheng Jin and and Xiangtai Li and Wentao Liu and Chen Change Loy},
-    journal={arXiv preprint arXiv:2303.13495},
+    journal={arXiv preprint arXiv:2310.xxxxx},
     year={2023}
 }
 ```
