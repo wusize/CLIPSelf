@@ -5,7 +5,7 @@ class_weight = [
     1.0, 1.0, 1.0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 0, 1.0, 1.0, 0, 0,
     1.0, 1.0, 1.0, 1.0, 0, 1.0, 0, 1.0, 1.0, 1.0, 0, 1.0, 0, 1.0, 1.0, 0, 1.0,
     0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 1.0, 0, 1.0, 1.0,
-    1.0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 1.0, 0, 1.0, 0.2
+    1.0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 1.0, 0, 1.0, 0.7
 ]
 model = dict(
     type='FViT',
@@ -133,7 +133,7 @@ model = dict(
             score_thr=0.01,
             nms=dict(type='nms', iou_threshold=0.4),
             max_per_img=100)))
-checkpoint_config = dict(interval=1, max_keep_ckpts=1, save_last=True)
+checkpoint_config = dict(interval=1)
 log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
 dist_params = dict(backend='nccl')
 log_level = 'INFO'

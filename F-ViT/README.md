@@ -47,15 +47,17 @@ CLIPSelf/F-ViT
         ├── val
     
 ```
-For open-vocabulary detection, we provide some processed json files in 
-[Google Drive](https://drive.google.com/drive/folders/1kFkNmD7Dp3y7jZzPBKdS8dcvqzGWFxXg?usp=sharing).
+For open-vocabulary detection, we provide some preprocessed json files in 
+[Drive](https://drive.google.com/drive/folders/19Ez8zL1cycP1FeQPpSsqCVsgsRPREQRg?usp=sharing).
 Put `instances_val2017_all_2.json` and `instances_train2017_seen_2_65_cat.json` under `data/coco/zero-shot/`, 
 `lvis_v1_train_seen_1203_cat.json` under `data/lvis_v1/annotations/`, and `objects365_reorder_val.json` under 
 `data/Objects365v1/`.
 
 
 ## CLIPSelf Checkpoints
-Obtain the checkpoints from [Drive](). And they can be organized as follows:
+Obtain the checkpoints from 
+[Drive](https://drive.google.com/drive/folders/1APWIE7M5zcymbjh5OONqXdBOxFy3Ghwm?usp=sharing). 
+And they can be organized as follows:
 
 ```text
 CLIPSelf/FViT/  
@@ -76,12 +78,12 @@ The detectors on OV-COCO are summarized as follows:
 
 |  #  | Backbone | CLIP Refinement | Proposals | AP50 |                                           Config                                           | Checkpoint |
 |:---:|:--------:|:---------------:|:---------:|:----:|:------------------------------------------------------------------------------------------:|:----------:|
-|  1  | ViT-B/16 |    CLIPSelf     |     -     | 33.6 |   [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model]()  |
-|  2  | ViT-B/16 |    CLIPSelf     |     +     | 37.6 |  [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model]()  |
-|  3  | ViT-B/16 |   RegionCLIP    |     +     | 34.4 |      [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model]()  |
-|  4  | ViT-L/14 |    CLIPSelf     |     -     | 38.4 |   [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model]()  |
-|  5  | ViT-L/14 |    CLIPSelf     |     +     | 44.3 |  [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model]()  |
-|  6  | ViT-L/14 |   RegionCLIP    |     +     | 38.7 |      [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model]()  |
+|  1  | ViT-B/16 |    CLIPSelf     |     -     | 33.6 |   [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model](https://drive.google.com/file/d/1uoWWYN8HlNghBY8B9GH50z1W1OysU5Kw/view?usp=sharing)  |
+|  2  | ViT-B/16 |    CLIPSelf     |     +     | 37.6 |  [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model](https://drive.google.com/file/d/1NyolDlN5MZSlEdXB3QOgI23NHf68IjdE/view?usp=sharing)  |
+|  3  | ViT-B/16 |   RegionCLIP    |     +     | 34.4 |      [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model](https://drive.google.com/file/d/1KB2ko6oz1WmY_XSDJ-iJTNdOmj4Comdk/view?usp=sharing)  |
+|  4  | ViT-L/14 |    CLIPSelf     |     -     | 38.4 |   [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model](https://drive.google.com/file/d/1wn2dDlhq-3LI1MNBVzVnv7xd7NGo2nBX/view?usp=sharing)  |
+|  5  | ViT-L/14 |    CLIPSelf     |     +     | 44.3 |  [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model](https://drive.google.com/file/d/17U46gEt57eIc3wZ7SlpG_MLbpE0-MM0Z/view?usp=sharing)  |
+|  6  | ViT-L/14 |   RegionCLIP    |     +     | 38.7 |      [cfg](configs/ov_coco/fvit_vitl14_upsample_fpn_bs64_3e_ovcoco_eva_regionclip.py)      | [model](https://drive.google.com/file/d/1Fsg82-McQiHfIh8cxrG3C7eQnlAYHzX7/view?usp=sharing)  |
 
 
 The detectors on OV-LVIS are summarized as follows:
@@ -89,12 +91,14 @@ The detectors on OV-LVIS are summarized as follows:
 
 |  #  | Backbone | CLIP Refinement | Proposals | mAPr |                                         Config                                         | Checkpoint |
 |:---:|:--------:|:---------------:|:---------:|:----:|:--------------------------------------------------------------------------------------:|:----------:|
-|  7  | ViT-B/16 |    CLIPSelf     |     -     | 25.3 | [cfg](configs/ov_lvis/fvit_vitb16_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py) | [model]()  |
-|  8  | ViT-L/14 |    CLIPSelf     |     -     | 34.9 | [cfg](configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py) | [model]()  |
+|  7  | ViT-B/16 |    CLIPSelf     |     -     | 25.3 | [cfg](configs/ov_lvis/fvit_vitb16_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py) | [model](https://drive.google.com/file/d/1e_skYDzBttUfMzpfaUJA8bIcnUFVROrE/view?usp=sharing)  |
+|  8  | ViT-L/14 |    CLIPSelf     |     -     | 34.9 | [cfg](configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py) | [model](https://drive.google.com/file/d/1j-5P-RsJkOZtRoBLcz_1hJwGcY2M_GLl/view?usp=sharing)  |
 
 
 ## Test 
-We provide the checkpoints of the object detectors in [Drive](). And they can be organized as follows:
+We provide the checkpoints of the object detectors in 
+[Drive](https://drive.google.com/drive/folders/1MaBjbZZCfFd2HG3eCX98myYgWoWlPxrf?usp=sharing). 
+And they can be organized as follows:
 
 ```text
 CLIPSelf/FViT/  
@@ -141,7 +145,7 @@ bash dist_test.sh configs/transfer/fvit_vitl14_upsample_fpn_transfer2objects365v
 
 
 ## Train
-Prepare the checkpoints as shown in the [previous section](#clipself-checkpoints).
+Prepare the CLIPSelf/RegionCLIP checkpoints as shown in the [previous section](#clipself-checkpoints).
 An example of training on OV-COCO:
 
 ```bash
