@@ -46,7 +46,7 @@ CLIPSelf/
         ├── train2017    # the same with coco
         ├── val2017      # the same with coco
 ```
-
+For CLIPSelf with region proposals or RegionCLIP that uses region-text pairs, obtain `coco_pseudo_4764.json` or `coco_proposals.json` from [Drive](https://drive.google.com/drive/folders/11zG4nJffm0MbvA0Ph19p6jvJFj6VwRAH?usp=sharing). Put the json files under `data/coco`.
 
 ## Run
 ### Original Models 
