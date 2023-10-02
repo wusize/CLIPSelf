@@ -76,7 +76,7 @@ CLIPSelf/FViT/
 
 The detectors on OV-COCO are summarized as follows:
 
-|  #  | Backbone | CLIP Refinement | Proposals | AP50 |                                           Config                                           | Checkpoint |
+|  #  | Backbone | CLIP Refinement | Proposals | AP50_novel |                                           Config                                           | Checkpoint |
 |:---:|:--------:|:---------------:|:---------:|:----:|:------------------------------------------------------------------------------------------:|:----------:|
 |  1  | ViT-B/16 |    CLIPSelf     |     -     | 33.6 |   [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_patches.py)   | [model](https://drive.google.com/file/d/1uoWWYN8HlNghBY8B9GH50z1W1OysU5Kw/view?usp=sharing)  |
 |  2  | ViT-B/16 |    CLIPSelf     |     +     | 37.6 |  [cfg](configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py)  | [model](https://drive.google.com/file/d/1NyolDlN5MZSlEdXB3QOgI23NHf68IjdE/view?usp=sharing)  |
