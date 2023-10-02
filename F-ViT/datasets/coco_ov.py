@@ -1,13 +1,6 @@
 import json
-import mmcv
-import numpy as np
-from mmcv.utils import print_log
-from terminaltables import AsciiTable
-from mmdet.datasets.pipelines import Compose
-
 import contextlib
 import io
-import itertools
 import logging
 import warnings
 from collections import OrderedDict
@@ -15,13 +8,8 @@ from collections import OrderedDict
 import mmcv
 import numpy as np
 from mmcv.utils import print_log
-from terminaltables import AsciiTable
-import torch
-
-
 from mmdet.datasets.api_wrappers import COCO, COCOeval
 from mmdet.datasets.builder import DATASETS
-# from mmdet.datasets.custom import CustomDataset
 from mmdet.datasets.coco import CocoDataset
 
 
