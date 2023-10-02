@@ -214,7 +214,7 @@ data = dict(
 )
 evaluation = dict(interval=1, metric=['bbox'])
 optimizer = dict(type='AdamW', lr=0.0001, betas=(0.9, 0.999), weight_decay=0.1)
-optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+optimizer_config = dict(grad_clip=dict(max_norm=1.0, norm_type=2))
 lr_config = dict(
     policy='step',
     warmup='linear',

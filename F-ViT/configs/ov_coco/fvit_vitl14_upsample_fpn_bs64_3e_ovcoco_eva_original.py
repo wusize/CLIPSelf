@@ -5,7 +5,7 @@ class_weight = [
     1.0, 1.0, 1.0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 0, 1.0, 1.0, 0, 0,
     1.0, 1.0, 1.0, 1.0, 0, 1.0, 0, 1.0, 1.0, 1.0, 0, 1.0, 0, 1.0, 1.0, 0, 1.0,
     0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0, 1.0, 0, 1.0, 1.0,
-    1.0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 1.0, 0, 1.0, 0.7
+    1.0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 0, 1.0, 1.0, 1.0, 1.0, 0, 1.0, 0.6
 ]
 model = dict(
     type='FViT',
@@ -211,13 +211,14 @@ data = dict(
 )
 evaluation = dict(interval=1, metric=['bbox'])
 optimizer = dict(type='AdamW', lr=0.0001, betas=(0.9, 0.999), weight_decay=0.1)
-optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+optimizer_config = dict(grad_clip=dict(max_norm=1.0, norm_type=2))
 lr_config = dict(
     policy='step',
     warmup='linear',
     warmup_iters=250,
     warmup_ratio=0.001,
-    step=[100])
+    step=[100])       # do not decrease lr to avoid overfitting to base
 runner = dict(type='EpochBasedRunner', max_epochs=3)
+# further training the model leads to overfitting to base, usually obtain the best result at epoch 2
 fp16 = dict(loss_scale=512.0)
 auto_resume = False
