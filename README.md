@@ -6,7 +6,7 @@ This is an official release of the paper **CLIPSelf: Vision Transformer Distills
 
 > [**CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction**](https://arxiv.org/abs/2302.13996),            
 > Size Wu, Wenwei Zhang, Lumin Xu, Sheng Jin, Xiangtai Li, Wentao Liu, Chen Change Loy            
-> [[project page(TBD)](https://www.mmlab-ntu.com/)][[Bibetex](https://github.com/wusize/CLIPSelf#citation)]
+> [Bibetex](https://github.com/wusize/CLIPSelf#citation)
 
 ## TODO
 - [x] Code and models of CLIPSelf
