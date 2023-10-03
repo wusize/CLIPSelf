@@ -95,7 +95,7 @@ The detectors on OV-LVIS are summarized as follows:
 |  8  | ViT-L/14 |    CLIPSelf     |     -     | 34.9 | [cfg](configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py) | [model](https://drive.google.com/file/d/1j-5P-RsJkOZtRoBLcz_1hJwGcY2M_GLl/view?usp=sharing)  |
 
 
-## Test 
+### Test 
 We provide the checkpoints of the object detectors in 
 [Drive](https://drive.google.com/drive/folders/1MaBjbZZCfFd2HG3eCX98myYgWoWlPxrf?usp=sharing). 
 And they can be organized as follows:
@@ -128,7 +128,7 @@ bash dist_test.sh configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_cl
 ```
 
 
-## Transfer
+### Transfer
 Transfer evaluation on COCO:
 ```bash
 bash dist_test.sh configs/transfer/fvit_vitl14_upsample_fpn_transfer2coco.py \
@@ -144,7 +144,7 @@ bash dist_test.sh configs/transfer/fvit_vitl14_upsample_fpn_transfer2objects365v
 ```
 
 
-## Train
+### Train
 Prepare the CLIPSelf/RegionCLIP checkpoints as shown in the [previous section](#clipself-checkpoints).
 An example of training on OV-COCO:
 
