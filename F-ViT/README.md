@@ -149,13 +149,13 @@ Prepare the CLIPSelf/RegionCLIP checkpoints as shown in the [previous section](#
 An example of training on OV-COCO:
 
 ```bash
-bash dist_test.sh  configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py \
+bash dist_train.sh  configs/ov_coco/fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_clipself_proposals.py \
                    8 --work-dir your/working/directory
 ```
 
-An example of training on OV-LVIS
+An example of training on OV-LVIS:
 ```bash
-bash dist_test.sh configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py \
+bash dist_train.sh configs/ov_lvis/fvit_vitl14_upsample_fpn_bs64_4x_ovlvis_eva_clipself_patches.py \
                   8 --work-dir your/working/directory
 ```
 
