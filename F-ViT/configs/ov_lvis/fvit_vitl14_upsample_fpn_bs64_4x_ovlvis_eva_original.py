@@ -63,7 +63,7 @@ model = dict(
             learned_temperature=50.0,
             vlm_temperature=50.0,
             alpha=0.1,
-            beta=0.4,
+            beta=0.4,       # a larger beta can significantly increase APr, e.g., setting beta=0.6 or 0.8
             class_embed=
             'datasets/embeddings/lvis_with_background_evaclip_vitl14x336.pt',
             seen_classes='datasets/lvis_v1_seen_classes.json',
