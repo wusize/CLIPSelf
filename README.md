@@ -4,7 +4,7 @@
 
 This is an official release of the paper **CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction**.
 
-> [**CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction**](https://arxiv.org/abs/2302.13996),            
+> [**CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction**](https://arxiv.org/abs/2310.01403),            
 > Size Wu, Wenwei Zhang, Lumin Xu, Sheng Jin, Xiangtai Li, Wentao Liu, Chen Change Loy            
 > [Bibetex](https://github.com/wusize/CLIPSelf#citation)
 
@@ -119,7 +119,7 @@ This project is released under the [Apache 2.0 license](LICENSE).
 @article{wu2023clipself,
     title={CLIPSelf: Vision Transformer Distills Itself for Open-Vocabulary Dense Prediction},
     author={Size Wu and Wenwei Zhang and Lumin Xu and Sheng Jin and Xiangtai Li and Wentao Liu and Chen Change Loy},
-    journal={arXiv preprint},
+    journal={arXiv preprint arXiv:2310.01403},
     year={2023}
 }
 ```
