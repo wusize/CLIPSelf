@@ -109,9 +109,7 @@ bash scripts/test_eva_vitl14_macc_boxes_masks.sh name_of_the_test path/to/checkp
 Go to the folder `CLIPSelf/F-ViT` and follow the instructions in this [README](F-ViT/README.md).
 
 ## License
-
-This project is released under the [Apache 2.0 license](LICENSE).
-
+This project is licensed under [NTU S-Lab License 1.0](LICENSE).
 
 ## Citation
 
