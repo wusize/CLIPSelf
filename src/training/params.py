@@ -94,6 +94,16 @@ def parse_args(args):
         default=False,
     )
     parser.add_argument(
+        "--window-attention",
+        action="store_true",
+        default=False,
+    )
+    parser.add_argument(
+        "--window-size",
+        type=int,
+        default=16,
+    )
+    parser.add_argument(
         "--min-size",
         type=int,
         default=8,

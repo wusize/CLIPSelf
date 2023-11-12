@@ -323,8 +323,8 @@ class CustomCLIP(nn.Module):
         text_features = self.encode_text(text, normalize=True)
         return image_features, text_features, self.logit_scale.exp()
 
-    def encode_dense(self, image, normalize: bool = False, keep_shape=False):
-        features = self.visual.encode_dense(image, keep_shape=keep_shape)
+    def encode_dense(self, image, normalize: bool = False, keep_shape=False, **kwargs):
+        features = self.visual.encode_dense(image, keep_shape=keep_shape, **kwargs)
         if normalize:
             if keep_shape:
                 features = F.normalize(features, dim=1)
@@ -333,14 +333,15 @@ class CustomCLIP(nn.Module):
         return features
 
     def encode_pseudo_boxes(self, image, normed_boxes, normalize: bool = False,
-                            extract_type='v1'):
-        features = self.visual.extract_roi_features(image, normed_boxes, extract_type=extract_type)
+                            extract_type='v2', **kwargs):
+        features = self.visual.extract_roi_features(image, normed_boxes, extract_type=extract_type,
+                                                    **kwargs)
         if normalize:
             features = F.normalize(features, dim=-1)
         return features
 
-    def encode_masks(self, image, masks, normalize=True, mask_attn=False):
-        mask_pooled = self.visual.mask_pool(image, masks)
+    def encode_masks(self, image, masks, normalize=True, mask_attn=False, **kwargs):
+        mask_pooled = self.visual.mask_pool(image, masks, **kwargs)
         if normalize:
             mask_pooled = F.normalize(mask_pooled, dim=-1)
         return mask_pooled

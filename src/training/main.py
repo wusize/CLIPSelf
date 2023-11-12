@@ -194,6 +194,16 @@ def main(args):
     # create optimizer and scaler
     optimizer = None
     scaler = None
+    if args.window_attention:
+        if "B-16" in args.model:
+            args.window_block_indexes = [0, 1, 3, 4, 6, 7, 9, 10]
+        elif "L-14" in args.model:
+            args.window_block_indexes = list(range(0, 5)) + list(range(6, 11)) \
+                                        + list(range(12, 17)) + list(range(18, 23))
+        else:
+            raise ValueError
+    else:
+        args.window_block_indexes = []
 
     if args.train_data:
         exclude = lambda n, p: p.ndim < 2 or "bn" in n or "ln" in n or "bias" in n or 'logit_scale' in n

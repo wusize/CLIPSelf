@@ -29,7 +29,7 @@ except ImportError:
     xops = None
     print("Please 'pip install xformers'")
 from typing import Sequence
-
+from open_clip.window_attentions import window_partition, window_unpartition
 
 class DropPath(nn.Module):
     """Drop paths (Stochastic Depth) per sample  (when applied in main path of residual blocks).
@@ -585,10 +585,11 @@ class EVAVisionTransformer(nn.Module):
         x = self.head(x)
         return x
 
-    def encode_dense(self, x, keep_shape=True):
+    def encode_dense(self, x, keep_shape=True, window_size=None, window_block_indexes=[]):
         bs, _, h, w = x.shape
         h = h // self.patch_embed.patch_size[0]
         w = w // self.patch_embed.patch_size[1]
+        assert h == w, "For now we only accept h == w"
         x = self.patch_embed(x)
         batch_size, seq_len, _ = x.size()
 
@@ -610,8 +611,16 @@ class EVAVisionTransformer(nn.Module):
             x = self.patch_dropout(x)
 
         rel_pos_bias = self.rel_pos_bias() if self.rel_pos_bias is not None else None
-        for blk in self.blocks[:-1]:
-            x = blk(x, rel_pos_bias=rel_pos_bias)
+        for blk_idx, blk in enumerate(self.blocks[:-1]):
+            if blk_idx in window_block_indexes:
+                # TODO: window attention
+                # x: bs, sq_len, c
+                x_windows, pad_hw = window_partition(x, window_size=window_size)
+                x_windows = blk(x_windows, rel_pos_bias=rel_pos_bias)
+                x = window_unpartition(x_windows, window_size=window_size,
+                                       hw=(h, w), pad_hw=pad_hw)
+            else:
+                x = blk(x, rel_pos_bias=rel_pos_bias)
         x = self.blocks[-1].forward_without_attn(x)[:, 1:]
         x = self.norm(x)
         x = self.head(x)
@@ -623,7 +632,9 @@ class EVAVisionTransformer(nn.Module):
         return x
 
     def extract_roi_features(self, x, normed_boxes, **kwargs):
-        x = self.encode_dense(x, keep_shape=True)
+        x = self.encode_dense(x, keep_shape=True,
+                              window_size=kwargs.get('window_size', None),
+                              window_block_indexes=kwargs.get('window_block_indexes', []))
 
         return roi_align(x, self._denormalize_boxes(normed_boxes, x), (1, 1),
                          1.0, -1, True)[..., 0, 0]
@@ -642,8 +653,10 @@ class EVAVisionTransformer(nn.Module):
 
         return rescaled_positional_embedding
 
-    def mask_pool(self, x, masks):
-        feature_map = self.encode_dense(x, keep_shape=False)
+    def mask_pool(self, x, masks, **kwargs):
+        feature_map = self.encode_dense(x, keep_shape=False,
+                                        window_size=kwargs.get('window_size', None),
+                                        window_block_indexes=kwargs.get('window_block_indexes', []))
         num_masks_per_image = [len(masks_per_image) for masks_per_image in masks]
         masks = torch.cat(masks).float().flatten(-2, -1)    # bs, h*w
         feature_map = torch.repeat_interleave(
