@@ -22,6 +22,7 @@ class FViTBBoxHead(ConvFCBBoxHead):
                  alpha=0.2,
                  beta=0.45,
                  learn_bg=False,
+                 zero_shot=False,
                  **kwargs):
         super(FViTBBoxHead, self).__init__(**kwargs)
         if fixed_temperature != 0:
@@ -33,6 +34,7 @@ class FViTBBoxHead(ConvFCBBoxHead):
         self.alpha = alpha
         self.beta = beta
         self.learn_bg = learn_bg
+        self.zero_shot = zero_shot
 
         assert class_embed is not None, 'class embed is None'
         self.seen_classes = json.load(open(seen_classes)) + ['background']
@@ -109,14 +111,16 @@ class FViTBBoxHead(ConvFCBBoxHead):
         cls_score = normalized_x_cls @ all_embed * self.detect_temperature
 
         if not self.training and normalized_vlm_box_feats is not None:
-            cls_score = cls_score.softmax(dim=-1)
             vlm_score = normalized_vlm_box_feats @ all_embed * self.vlm_temperature
             vlm_score = vlm_score.softmax(dim=-1)
-
-            cls_score[:, self.base_idx] = cls_score[:, self.base_idx] ** (
-                    1 - self.alpha) * vlm_score[:, self.base_idx] ** self.alpha
-            cls_score[:, self.novel_idx] = cls_score[:, self.novel_idx] ** (
-                    1 - self.beta) * vlm_score[:, self.novel_idx] ** self.beta
+            if self.zero_shot:
+                cls_score = vlm_score
+            else:
+                cls_score = cls_score.softmax(dim=-1)
+                cls_score[:, self.base_idx] = cls_score[:, self.base_idx] ** (
+                        1 - self.alpha) * vlm_score[:, self.base_idx] ** self.alpha
+                cls_score[:, self.novel_idx] = cls_score[:, self.novel_idx] ** (
+                        1 - self.beta) * vlm_score[:, self.novel_idx] ** self.beta
 
         return cls_score, bbox_pred
 

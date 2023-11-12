@@ -1,5 +1,5 @@
 from mmdet.models.builder import DETECTORS
-from mmdet.models.detectors import TwoStageDetector
+from mmdet.models.detectors import TwoStageDetector, RPN
 
 
 @DETECTORS.register_module()
@@ -74,3 +74,15 @@ class FViT(TwoStageDetector):
         losses.update(roi_losses)
 
         return losses
+
+
+@DETECTORS.register_module()
+class FViTRPN(RPN):
+    def extract_feat(self, img):
+        res_feats = self.backbone(img)
+        if self.with_neck:
+            x = self.neck(res_feats[:-1])
+        else:
+            x = res_feats[:-1]
+
+        return x
