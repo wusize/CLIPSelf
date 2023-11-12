@@ -62,7 +62,7 @@ class FViTBBoxHead(ConvFCBBoxHead):
         else:
             return self.all_embeddings
 
-    def forward(self, x, vlm_box_feats=None):
+    def forward(self, x, vlm_box_feats=None, proposal_scores=None):
         all_embed = self.all_embed.type_as(x)
 
         if vlm_box_feats is not None:
@@ -114,7 +114,7 @@ class FViTBBoxHead(ConvFCBBoxHead):
             vlm_score = normalized_vlm_box_feats @ all_embed * self.vlm_temperature
             vlm_score = vlm_score.softmax(dim=-1)
             if self.zero_shot:
-                cls_score = vlm_score
+                cls_score = (vlm_score ** self.beta) * (proposal_scores[:, None] ** (1 - self.alpha))
             else:
                 cls_score = cls_score.softmax(dim=-1)
                 cls_score[:, self.base_idx] = cls_score[:, self.base_idx] ** (
@@ -219,7 +219,10 @@ class FViTRoIHead(StandardRoIHead):
             # There is no proposal in the whole batch
             return [det_bbox] * batch_size, [det_label] * batch_size
 
-        bbox_results = self._bbox_forward(x, rois, vlm_feat=vlm_feat)
+        proposal_scores = torch.cat([p[:, -1] for p in proposals])
+
+        bbox_results = self._bbox_forward(x, rois, vlm_feat=vlm_feat,
+                                          proposal_scores=proposal_scores)
         img_shapes = tuple(meta['img_shape'] for meta in img_metas)
         scale_factors = tuple(meta['scale_factor'] for meta in img_metas)
 
@@ -268,7 +271,7 @@ class FViTRoIHead(StandardRoIHead):
             det_labels.append(det_label)
         return det_bboxes, det_labels
 
-    def _bbox_forward(self, x, rois, vlm_feat=None):
+    def _bbox_forward(self, x, rois, vlm_feat=None, proposal_scores=None):
         """Box head forward function used in both training and testing."""
         # TODO: a more flexible way to decide which feature maps to use
         bbox_feats = self.bbox_roi_extractor(
@@ -278,7 +281,8 @@ class FViTRoIHead(StandardRoIHead):
         vlm_roi_feats = None
         if vlm_feat is not None:
             vlm_roi_feats = self.vlm_roi_extractor([vlm_feat], rois)[..., 0, 0]
-        cls_score, bbox_pred = self.bbox_head(bbox_feats, vlm_roi_feats)
+        cls_score, bbox_pred = self.bbox_head(bbox_feats, vlm_roi_feats,
+                                              proposal_scores=proposal_scores)
 
         bbox_results = dict(
             cls_score=cls_score, bbox_pred=bbox_pred, bbox_feats=bbox_feats)
