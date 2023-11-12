@@ -147,7 +147,7 @@ opencv_num_threads = 0
 mp_start_method = 'fork'
 auto_scale_lr = dict(enable=True, base_batch_size=64)
 dataset_type = 'CocoDatasetOV'
-image_size = (640, 640)
+image_size = (1024, 1024)
 file_client_args = dict(backend='disk')
 train_pipeline = [
     dict(type='LoadImageFromFile', file_client_args=file_client_args),
