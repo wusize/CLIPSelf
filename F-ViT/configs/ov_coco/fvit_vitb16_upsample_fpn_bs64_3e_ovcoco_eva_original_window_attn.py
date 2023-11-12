@@ -16,6 +16,7 @@ model = dict(
         norm_cfg=norm_cfg,
         out_indices=[3, 5, 7, 11],
         window_block_indexes=[0, 1, 3, 4, 6, 7, 9, 10],
+        window_size=10
     ),
     neck=dict(
         type='FPN',
@@ -147,7 +148,7 @@ opencv_num_threads = 0
 mp_start_method = 'fork'
 auto_scale_lr = dict(enable=True, base_batch_size=64)
 dataset_type = 'CocoDatasetOV'
-image_size = (1024, 1024)
+image_size = (640, 640)
 file_client_args = dict(backend='disk')
 train_pipeline = [
     dict(type='LoadImageFromFile', file_client_args=file_client_args),
