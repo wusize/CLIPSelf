@@ -242,7 +242,7 @@ def parse_args(args):
     )
     parser.add_argument(
         "--test-type",
-        choices=['coco_panoptic'],
+        choices=['coco_panoptic', 'retrieval'],
         default="coco_panoptic",
         help="Which type of dataset to process."
     )
