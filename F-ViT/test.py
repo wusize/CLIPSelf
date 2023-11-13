@@ -229,7 +229,7 @@ def main():
         fp16_cfg = dict(loss_scale='dynamic')
     if fp16_cfg is not None:
         wrap_fp16_model(model)
-    if args.checkpoint:
+    if os.path.exists(args.checkpoint):
         checkpoint = load_checkpoint(model, args.checkpoint, map_location='cpu')
         # old versions did not save class info in checkpoints, this walkaround is
         # for backward compatibility
