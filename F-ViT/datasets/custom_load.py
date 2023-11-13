@@ -27,7 +27,7 @@ class CustomLoadProposals:
         """
 
         proposals = results['proposals']
-        if proposals.shape[1] == 5:
+        if proposals.shape[1] != 5:
             raise AssertionError(
                 'proposals should have shapes (n, 5), '
                 f'but found {proposals.shape}')
