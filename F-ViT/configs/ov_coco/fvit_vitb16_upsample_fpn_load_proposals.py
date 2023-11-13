@@ -11,7 +11,7 @@ test_pipeline = [
         img_scale=image_size,
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
+            dict(type='CustomResize', keep_ratio=True),
             dict(type='RandomFlip'),
             dict(
                 type='Normalize',

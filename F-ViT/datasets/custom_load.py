@@ -1,5 +1,6 @@
 import numpy as np
 from mmdet.datasets.builder import PIPELINES
+from mmdet.datasets.pipelines import Resize
 
 
 @PIPELINES.register_module()
@@ -40,3 +41,17 @@ class CustomLoadProposals:
         results['proposals'] = proposals
         results['bbox_fields'].append('proposals')
         return results
+
+
+
+@PIPELINES.register_module()
+class CustomResize(Resize):
+    def _resize_bboxes(self, results):
+        """Resize bounding boxes with ``results['scale_factor']``."""
+        for key in results.get('bbox_fields', []):
+            bboxes = results[key][:, :4] * results['scale_factor']
+            if self.bbox_clip_border:
+                img_shape = results['img_shape']
+                bboxes[:, 0::2] = np.clip(bboxes[:, 0::2], 0, img_shape[1])
+                bboxes[:, 1::2] = np.clip(bboxes[:, 1::2], 0, img_shape[0])
+            results[key][:, :4] = bboxes
