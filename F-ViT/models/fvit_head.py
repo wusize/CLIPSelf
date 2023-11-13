@@ -114,7 +114,7 @@ class FViTBBoxHead(ConvFCBBoxHead):
             vlm_score = normalized_vlm_box_feats @ all_embed * self.vlm_temperature
             vlm_score = vlm_score.softmax(dim=-1)
             if self.zero_shot:
-                cls_score = (vlm_score ** self.beta) * (proposal_scores[:, None] ** (1 - self.alpha))
+                cls_score = vlm_score * proposal_scores[:, None]
             else:
                 cls_score = cls_score.softmax(dim=-1)
                 cls_score[:, self.base_idx] = cls_score[:, self.base_idx] ** (
@@ -144,7 +144,7 @@ class FViTBBoxHead(ConvFCBBoxHead):
                 scores = cls_score
         # bbox_pred would be None in some detector when with_reg is False,
         # e.g. Grid R-CNN.
-        if bbox_pred is not None:
+        if (bbox_pred is not None) and (not self.zero_shot):
             bboxes = self.bbox_coder.decode(rois[..., 1:],
                                             bbox_pred,
                                             max_shape=img_shape)

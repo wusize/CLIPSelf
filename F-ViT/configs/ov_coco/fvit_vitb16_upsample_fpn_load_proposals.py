@@ -1,5 +1,6 @@
 _base_ = './fvit_vitb16_upsample_fpn_bs64_3e_ovcoco_eva_original.py'
-model = dict(rpn_head=None)
+model = dict(rpn_head=None,
+             roi_head=dict(bbox_head=dict(zero_shot=True)))
 image_size = (640, 640)
 file_client_args = dict(backend='disk')
 test_pipeline = [
