@@ -217,7 +217,7 @@ def run_retrieval(model, dist_model, dataloader, args):
 
                 valid_pixels = pixel_labels_[:, 1] >= 0
                 if valid_pixels.sum() > 0:
-                    valid_pixel_labels = pixel_labels_[valid_pixels]
+                    valid_pixel_labels = pixel_labels_[valid_pixels][:, 1]
                     valid_features = feature_map_[valid_pixels]
                     for valid_pixel_label, valid_feature \
                             in zip(valid_pixel_labels, valid_features):
