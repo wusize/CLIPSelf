@@ -493,7 +493,7 @@ class COCORetrievalDataset(COCOPanopticDataset):
                 image_crops[i] = self.transforms[1](old_image.crop((x0, y0, x1, y1)))   # image crops
                 gt_mask = torch.from_numpy(segm_map == ann['id']).float()
                 gt_mask = self.segm_transform(gt_mask[None]) > 0.0    # resized to feature map size
-                pixel_labels[..., 1][gt_mask] = ann['id']   # assign ann_id
+                pixel_labels[..., 1][gt_mask[0]] = ann['id']   # assign ann_id
                 image_crops_ids[i] = ann['id']
 
         _, h, w = new_image.shape
