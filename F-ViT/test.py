@@ -229,15 +229,20 @@ def main():
         fp16_cfg = dict(loss_scale='dynamic')
     if fp16_cfg is not None:
         wrap_fp16_model(model)
-    checkpoint = load_checkpoint(model, args.checkpoint, map_location='cpu')
-    if args.fuse_conv_bn:
-        model = fuse_conv_bn(model)
-    # old versions did not save class info in checkpoints, this walkaround is
-    # for backward compatibility
-    if 'CLASSES' in checkpoint.get('meta', {}):
-        model.CLASSES = checkpoint['meta']['CLASSES']
+    if args.checkpoint:
+        checkpoint = load_checkpoint(model, args.checkpoint, map_location='cpu')
+        # old versions did not save class info in checkpoints, this walkaround is
+        # for backward compatibility
+        if 'CLASSES' in checkpoint.get('meta', {}):
+            model.CLASSES = checkpoint['meta']['CLASSES']
+        else:
+            model.CLASSES = dataset.CLASSES
     else:
         model.CLASSES = dataset.CLASSES
+        warnings.warn('Checkpoint is not load. Make sure only the frozen CLIP backbone is used '
+                      'during inference')
+    if args.fuse_conv_bn:
+        model = fuse_conv_bn(model)
 
     if not distributed:
         model = build_dp(model, cfg.device, device_ids=cfg.gpu_ids)

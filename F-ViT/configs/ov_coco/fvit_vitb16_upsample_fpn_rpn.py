@@ -91,12 +91,12 @@ data = dict(
     workers_per_gpu=8,
     val=dict(
         type=dataset_type,
-        ann_file='data/coco/annotations/instances_val2017.json',
+        ann_file='data/coco/zero-shot/instances_val2017_all_2.json',
         img_prefix='data/coco/val2017/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file='data/coco/annotations/instances_val2017.json',
+        ann_file='data/coco/zero-shot/instances_val2017_all_2.json',
         img_prefix='data/coco/val2017/',
         pipeline=test_pipeline)
 )
