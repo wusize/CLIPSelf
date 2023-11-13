@@ -20,7 +20,7 @@ test_pipeline = [
                 to_rgb=True),
             dict(type='Pad', pad_to_square=True),
             dict(type='ImageToTensor', keys=['img']),
-            dict(type='Collect', keys=['img'])
+            dict(type='Collect', keys=['img', 'proposals'])
         ])
 ]
 data = dict(
