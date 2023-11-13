@@ -5,7 +5,7 @@ image_size = (640, 640)
 file_client_args = dict(backend='disk')
 test_pipeline = [
     dict(type='LoadImageFromFile', file_client_args=file_client_args),
-    dict(type='LoadProposals', num_max_proposals=None),
+    dict(type='CustomLoadProposals', num_max_proposals=None),
     dict(
         type='MultiScaleFlipAug',
         img_scale=image_size,
