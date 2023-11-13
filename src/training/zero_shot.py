@@ -212,7 +212,7 @@ def run_retrieval(model, dist_model, dataloader, args):
                 all_positions = [pos_position] + neg_positions
                 cand_image_embeddings = image_embeddings[all_positions]   # 50 c
                 similarity_matrix = feature_map_ @ cand_image_embeddings.T  # hw 50
-                top_10 = similarity_matrix.topk(10, dim=1)
+                top_10 = similarity_matrix.topk(10, dim=1).indices
                 image_retrieval_correct.append(top_10 == 0)
 
                 valid_pixels = pixel_labels_[:, 1] >= 0
@@ -234,7 +234,7 @@ def run_retrieval(model, dist_model, dataloader, args):
                         all_positions = [pos_position] + neg_positions
                         cand_crop_embeddings = crop_embeddings[all_positions]  # 50 c
                         similarity_matrix = valid_feature[None] @ cand_crop_embeddings.T
-                        top_10 = similarity_matrix.topk(10, dim=1)
+                        top_10 = similarity_matrix.topk(10, dim=1).indices
                         region_retrieval_correct.append(top_10 == 0)
 
         image_retrieval_correct = torch.cat(image_retrieval_correct)
