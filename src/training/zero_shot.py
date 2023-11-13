@@ -191,12 +191,12 @@ def run_retrieval(model, dist_model, dataloader, args):
             if cast_dtype is not None:
                 images = images.to(dtype=cast_dtype)
 
-            feature_map = module.encode_dense(images, normalize=True, keep_shape=False)  # bs, h, w, c
+            feature_map = module.encode_dense(images, normalize=True, keep_shape=False)  # bs, h*w, c
 
             for pixel_labels_, feature_map_ in zip(pixel_labels, feature_map):
                 # Image Retrieval
                 pixel_labels_ = pixel_labels_.flatten(0, 1)
-                feature_map_ = feature_map_.flatten(0, 1)  # h*w, c
+                # feature_map_ = feature_map_.flatten(0, 1)  # h*w, c
 
                 # Collect pos and neg image ids
                 pos_image_id = pixel_labels_[0, 0]
