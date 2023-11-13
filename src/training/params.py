@@ -337,7 +337,19 @@ def parse_args(args):
         help="Name of the vision backbone to use.",
     )
     parser.add_argument(
+        "--dist-cache-dir",
+        type=str,
+        default="",
+        help="Name of the vision backbone to use.",
+    )
+    parser.add_argument(
         "--pretrained",
+        default='',
+        type=str,
+        help="Use a pretrained CLIP model weights with the specified tag or file path.",
+    )
+    parser.add_argument(
+        "--dist-pretrained",
         default='',
         type=str,
         help="Use a pretrained CLIP model weights with the specified tag or file path.",

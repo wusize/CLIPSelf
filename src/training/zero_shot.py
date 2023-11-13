@@ -135,6 +135,126 @@ def run(model, dataloader, args):
         all_box_sizes, all_is_thing, all_cls_labels
 
 
+def run_retrieval(model, dist_model, dataloader, args):
+    autocast = get_autocast(args.precision)
+    cast_dtype = get_cast_dtype(args.precision)
+    with torch.no_grad():
+        image_embeddings_list = []
+        image_ids_list = []
+        crop_embeddings_list = []
+        crop_ids_list = []
+
+        # First run, region retrieval and collect image embeddings
+        for images, pixel_labels, image_crops, image_crops_ids \
+                in tqdm(dataloader, disable=not is_master(args)):
+            images = images.to(args.device)
+            image_crops = image_crops.to(args.device)
+            image_crops_ids = image_crops_ids.to(args.device)
+            pixel_labels = pixel_labels.to(args.device)
+
+            if cast_dtype is not None:
+                images = images.to(dtype=cast_dtype)
+                image_crops = image_crops.to(dtype=cast_dtype)
+
+            image_crops = image_crops.flatten(0, 1)  # bs*num, 3, h, w
+            image_crops_ids = image_crops_ids.flatten(0, 1)  # bs*num
+            crop_valid = image_crops_ids >= 0
+            image_crops = image_crops[crop_valid]
+            image_crops_ids = image_crops_ids[crop_valid]
+
+            with autocast():
+                # predict
+                if args.distributed and not args.horovod:
+                    module = model.module
+                    dist_module = dist_model.module
+                else:
+                    module = model
+                    dist_module = dist_model
+                image_embeddings_list.append(dist_module.encode_image(images, normalize=True))
+                image_ids_list.append(pixel_labels[:, 0, 0, 0])
+                if len(image_crops) > 0:
+                    crop_embeddings_list.append(dist_module.encode_image(image_crops, normalize=True))
+                    crop_ids_list.append(image_crops_ids)
+
+        image_embeddings = torch.cat(image_embeddings_list)
+        image_ids = torch.cat(image_ids_list)
+        crop_embeddings = torch.cat(crop_embeddings_list)
+        crop_ids = torch.cat(crop_ids_list)
+        image_retrieval_correct = []
+        region_retrieval_correct = []
+
+        for images, pixel_labels, _, _ \
+                in tqdm(dataloader, disable=not is_master(args)):
+            images = images.to(args.device)
+            pixel_labels = pixel_labels.to(args.device)
+
+            if cast_dtype is not None:
+                images = images.to(dtype=cast_dtype)
+
+            feature_map = module.encode_dense(images, normalize=True, keep_shape=False)  # bs, h, w, c
+
+            for pixel_labels_, feature_map_ in zip(pixel_labels, feature_map):
+                # Image Retrieval
+                pixel_labels_ = pixel_labels_.flatten(0, 1)
+                feature_map_ = feature_map_.flatten(0, 1)  # h*w, c
+
+                # Collect pos and neg image ids
+                pos_image_id = pixel_labels_[0, 0]
+                pos_position = torch.where(image_ids == pos_image_id)[0][0].item()
+                neg_positions = [position_ for position_ in
+                                 range(pos_position + 1, pos_position + 50)
+                                 if position_ < len(image_ids) and image_ids[position_] != pos_image_id]
+                if len(neg_positions) < 49:
+                    num_left = 49 - len(neg_positions)
+                    neg_positions += [position_ for position_ in
+                                      range(pos_position - num_left, pos_position)
+                                      if position_ >= 0 and image_ids[position_] != pos_image_id]
+                all_positions = [pos_position] + neg_positions
+                cand_image_embeddings = image_embeddings[all_positions]   # 50 c
+                similarity_matrix = feature_map_ @ cand_image_embeddings.T  # hw 50
+                top_10 = similarity_matrix.topk(10, dim=1)
+                image_retrieval_correct.append(top_10 == 0)
+
+                valid_pixels = pixel_labels_[:, 1] >= 0
+                if valid_pixels.sum() > 0:
+                    valid_pixel_labels = pixel_labels_[valid_pixels]
+                    valid_features = feature_map_[valid_pixels]
+                    for valid_pixel_label, valid_feature \
+                            in zip(valid_pixel_labels, valid_features):
+                        # Collect pos and neg region ids
+                        pos_position = torch.where(crop_ids == valid_pixel_label)[0][0].item()
+                        neg_positions = [position_ for position_ in
+                                         range(pos_position + 1, pos_position + 50)
+                                         if position_ < len(crop_ids) and crop_ids[position_] != valid_pixel_label]
+                        if len(neg_positions) < 49:
+                            num_left = 49 - len(neg_positions)
+                            neg_positions += [position_ for position_ in
+                                              range(pos_position - num_left, pos_position)
+                                              if position_ >= 0 and crop_ids[position_] != valid_pixel_label]
+                        all_positions = [pos_position] + neg_positions
+                        cand_crop_embeddings = crop_embeddings[all_positions]  # 50 c
+                        similarity_matrix = valid_feature[None] @ cand_crop_embeddings.T
+                        top_10 = similarity_matrix.topk(10, dim=1)
+                        region_retrieval_correct.append(top_10 == 0)
+
+        image_retrieval_correct = torch.cat(image_retrieval_correct)
+        region_retrieval_correct = torch.cat(region_retrieval_correct)
+        image_retrieval_recall = torch.stack([
+            image_retrieval_correct[:, :topk].float().sum(-1).mean()
+            for topk in [1, 5, 10]
+        ]).view(1, 3)
+        region_retrieval_recall = torch.stack([
+            region_retrieval_correct[:, :topk].float().sum(-1).mean()
+            for topk in [1, 5, 10]
+        ]).view(1, 3)
+
+        if args.distributed and not args.horovod:
+            image_retrieval_recall = multi_gpu_sync(image_retrieval_recall).mean(0)
+            region_retrieval_recall = multi_gpu_sync(region_retrieval_recall).mean(0)
+
+    return image_retrieval_recall, region_retrieval_recall
+
+
 def multi_gpu_sync(x):
     device = x.device
     x_list = all_gather(x.cpu())
@@ -179,20 +299,36 @@ def macc_with_is_thing(correct_matrix, is_thing, all_cls_labels, prefix):
     return results
 
 
-def zero_shot_eval(model, data, epoch, args):
+def zero_shot_eval(model, dist_model, data, epoch, args):
     if 'val' not in data:
         return {}
     if args.zeroshot_frequency == 0:
         return {}
     if (epoch % args.zeroshot_frequency) != 0 and epoch != args.epochs:
         return {}
-    logging.info('Region classifier')
     results = {}
-    correct_rois, correct_crops, correct_maskpool, \
-        similarity_rois, similarity_crops, similarity_maskpool, \
-        all_box_sizes, all_is_thing, all_cls_labels = run(model, data['val'].dataloader, args)
-    results.update(macc_with_is_thing(correct_rois, all_is_thing, all_cls_labels, 'rois'))
-    results.update(macc_with_is_thing(correct_crops, all_is_thing, all_cls_labels, 'crops'))
-    results.update(macc_with_is_thing(correct_maskpool, all_is_thing, all_cls_labels, 'maskpool'))
+    if args.test_type == 'coco_panoptic':
+        assert dist_model is None
+        logging.info('Region classifier')
+        correct_rois, correct_crops, correct_maskpool, \
+            similarity_rois, similarity_crops, similarity_maskpool, \
+            all_box_sizes, all_is_thing, all_cls_labels = run(model, data['val'].dataloader, args)
+        results.update(macc_with_is_thing(correct_rois, all_is_thing, all_cls_labels, 'rois'))
+        results.update(macc_with_is_thing(correct_crops, all_is_thing, all_cls_labels, 'crops'))
+        results.update(macc_with_is_thing(correct_maskpool, all_is_thing, all_cls_labels, 'maskpool'))
+    else:
+        assert args.test_type == 'retrieval'
+        image_retrieval_recall, region_retrieval_recall = \
+            run_retrieval(model, dist_model, data['val'].dataloader, args)
+        results.update(image_retrieval_r1=image_retrieval_recall[0].item(),
+                       image_retrieval_r5=image_retrieval_recall[1].item(),
+                       image_retrieval_r10=image_retrieval_recall[2].item(),
+                       region_retrieval_r1=region_retrieval_recall[0].item(),
+                       region_retrieval_r5=region_retrieval_recall[1].item(),
+                       region_retrieval_r10=region_retrieval_recall[2].item()
+                       )
+
+
+        logging.info('Region and Image Retrieval')
 
     return results

@@ -142,18 +142,18 @@ def main(args):
         method = RegionCLIP(args=args).to(device)
     else:
         raise NotImplementedError
-    if args.dataset_type == "region_clip":
+    if args.dataset_type == "region_clip" and args.test_type != 'retrieval':
         logging.info(f"{args.dataset_type}, set dist_model as None")
         dist_model = None
     else:
         logging.info(f"{args.dataset_type}, use dist_model")
         dist_model = create_model(
             args.model,  # same !
-            args.pretrained,
+            args.dist_pretrained or args.pretrained,
             device=device,
             precision=args.precision,
             output_dict=True,
-            cache_dir=args.cache_dir  # cache dir of pre-trained models
+            cache_dir=args.dist_cache_dir or args.cache_dir  # cache dir of pre-trained models
         )
 
     random_seed(args.seed, args.rank)
@@ -273,10 +273,12 @@ def main(args):
     logging.info('Evaluate before training')
     os.makedirs(args.checkpoint_path, exist_ok=True)
     if 'train' not in data:
-        del dist_model
-        evaluate(model, data, start_epoch, args)
+        # del dist_model
+        if args.test_type != 'retrieval':
+            dist_model = None
+        evaluate(model, dist_model, data, start_epoch, args)
         return
-    evaluate(model, data, start_epoch, args)
+    evaluate(model, dist_model, data, start_epoch, args)
 
     loss = None
 

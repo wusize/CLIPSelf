@@ -165,11 +165,11 @@ def train_one_epoch(model, method, data, loss, epoch, optimizer, scaler, schedul
             data_time_m.reset()
 
 
-def evaluate(model, data, epoch, args):
+def evaluate(model, dist_model, data, epoch, args):
     metrics = {}
     model.eval()
 
-    zero_shot_metrics = zero_shot_eval(model, data, epoch, args)
+    zero_shot_metrics = zero_shot_eval(model, dist_model, data, epoch, args)
     if not is_master(args):
         return {}
     metrics.update(zero_shot_metrics)

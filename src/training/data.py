@@ -459,6 +459,85 @@ class COCORegionCLIPDataset(Dataset):
         return new_image, boxes_template
 
 
+class COCORetrievalDataset(COCOPanopticDataset):
+
+
+    def __getitem__(self, idx):
+        image_id = self.image_ids[idx]
+        image_info = self.coco.imgs[image_id]
+        image_name = image_info['file_name']
+        segm_file = image_info['segm_file']
+        image_path = os.path.join(self.image_root, image_name)
+        segm_path = os.path.join(self.segm_root, segm_file)
+        segm_map = self._load_segm(segm_path)
+
+        old_image = Image.open(image_path)
+        img_w, img_h = old_image.width, old_image.height
+        new_image = self.transforms[0](old_image)
+
+        anns = self.coco.imgToAnns[image_id]
+        image_crops = torch.zeros(self.max_anns, 3, *self.crop_size)
+        image_crops_ids = -torch.ones(self.max_anns, dtype=torch.long)
+        pixel_labels = -torch.ones(self.segm_transform.max_size,
+                                   self.segm_transform.max_size, 2, dtype=torch.long)   # image_id, ann_id
+        pixel_labels[..., 0] = image_id   # assign image id
+
+        for i, ann in enumerate(anns[:self.max_anns]):
+            cat_id = ann['category_id']
+            is_thing = self.coco.cats[cat_id]['isthing']
+            if is_thing > 0:    # for this, we only use is_thing
+                x, y, w, h = ann['bbox']
+                cx, cy = x + w*0.5, y + h*0.5
+                x0, y0, x1, y1 = \
+                    max(cx - w*0.75, 0), max(cy - h*0.75, 0), min(cx + w*0.75, img_w), min(cy + h*0.75, img_h)
+                image_crops[i] = self.transforms[1](old_image.crop((x0, y0, x1, y1)))   # image crops
+                gt_mask = torch.from_numpy(segm_map == ann['id']).float()
+                gt_mask = self.segm_transform(gt_mask[None]) > 0.0    # resized to feature map size
+                pixel_labels[..., 1][gt_mask] = ann['id']   # assign ann_id
+                image_crops_ids[i] = ann['id']
+
+        _, h, w = new_image.shape
+
+        return new_image, pixel_labels, image_crops, image_crops_ids
+
+
+def get_coco_retrieval_dataset(args, preprocess_fn, is_train, epoch=0, tokenizer=None):
+    input_filename = args.train_data if is_train else args.val_data
+    assert input_filename
+    dataset = COCORetrievalDataset(
+        input_filename,
+        preprocess_fn,
+        segm_root=args.val_segm_root,
+        image_root=args.val_image_root,
+        embed_path=args.embed_path,
+        tokenizer=tokenizer,
+        crop_size=args.input_size,
+        min_size=args.min_size,
+        max_size=args.max_size,
+        downsample_factor=args.downsample_factor
+    )
+    num_samples = len(dataset)
+    # TODO: distributed for test
+    sampler = DistributedSampler(dataset) if args.distributed else None  #  and is_train else None
+    shuffle = is_train and sampler is None
+    if is_train:
+        batch_size = args.batch_size
+    else:
+        batch_size = min(args.batch_size, 1)     # only support bs = 1 for inference
+    dataloader = DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        num_workers=args.workers,
+        pin_memory=True,
+        sampler=sampler,
+        drop_last=is_train,
+    )
+    dataloader.num_samples = num_samples
+    dataloader.num_batches = len(dataloader)
+
+    return DataInfo(dataloader, sampler)
+
 def get_coco_panoptic_dataset(args, preprocess_fn, is_train, epoch=0, tokenizer=None):
     input_filename = args.train_data if is_train else args.val_data
     assert input_filename
@@ -621,6 +700,8 @@ class DataInfo:
 def get_dataset_fn(data_path, dataset_type):
     if dataset_type == 'coco_panoptic':
         return get_coco_panoptic_dataset
+    elif dataset_type == 'retrieval':
+        return get_coco_retrieval_dataset
     elif dataset_type == 'proposals_distill':
         return get_proposal_distill_dataset
     elif dataset_type == 'grid_distill':
