@@ -85,7 +85,7 @@ class CLIPSelfLlava:
         loss_l1 = F.l1_loss(student_roi_features, teacher_crop_features)
         losses = dict(loss_l1=loss_l1*args.l1_weight)
 
-        return losses, len(images), model.logit_scale.exp()
+        return losses, len(images), torch.tensor(100.0).to(teacher_crop_features)
 
 
     @staticmethod
