@@ -26,6 +26,7 @@ from open_clip.transform import ResizeLongest
 from torchvision.transforms import RandomHorizontalFlip, Compose
 from training.custom_transforms import SimpleRandomCrop
 
+
 class ProposalDistillDataset(Dataset):
     def __init__(self, input_filename, transforms, image_root,
                  crop_size=224,
