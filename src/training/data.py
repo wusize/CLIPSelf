@@ -139,13 +139,13 @@ class GridDistillDataset(Dataset):
                  crop_size=224,
                  pre_transforms=False,
                  ceph_root="", args=None):
+        self.args = args
         self._init_choices(max_split)
         logging.debug(f'Loading coco caption style data from {input_filename}.')
         self.coco = COCO(input_filename)
         logging.debug('Done loading data.')
         self.transforms = transforms
         self.image_root = image_root
-        self.args = args
         image_ids = list(self.coco.imgs.keys())
         train_ratio = args.train_ratio
         if train_ratio < 1.0:
