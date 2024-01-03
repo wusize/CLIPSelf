@@ -29,6 +29,7 @@ class CLIPVisionTower(nn.Module):
         self.select_layer = -2
         self.image_processor = CLIPImageProcessor.from_pretrained(self.vision_tower_name)
         self.vision_tower = CLIPVisionModel.from_pretrained(self.vision_tower_name)
+        self.place_holder = nn.Parameter(torch.zeros(1))
 
         for param in self.vision_tower.parameters():
             param.requires_grad = False
