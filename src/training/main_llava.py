@@ -170,8 +170,8 @@ def main(args):
                 logging.info(f"  {name}: {val}")
                 f.write(f"{name}: {val}\n")
 
-    model = CLIPVisionTower(vision_tower=args.model, unfreeze_layers=args.lock_image_unlocked_groups)
-    dist_model = CLIPVisionTower(vision_tower=args.model, unfreeze_layers=0)
+    model = CLIPVisionTower(vision_tower=args.model, unfreeze_layers=args.lock_image_unlocked_groups).to(device)
+    dist_model = CLIPVisionTower(vision_tower=args.model, unfreeze_layers=0).to(device)
     image_size = model.image_processor.crop_size['height']   # 336
     image_mean = model.image_processor.image_mean
     image_std = model.image_processor.image_std
