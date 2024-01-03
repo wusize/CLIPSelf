@@ -24,8 +24,7 @@ from open_clip.transform import ResizeLongest
 
 # import image transforms
 from torchvision.transforms import RandomHorizontalFlip, Compose
-from training.custom_transforms import CustomRandomResize, CustomRandomCrop
-
+from training.custom_transforms import SimpleRandomCrop
 
 class ProposalDistillDataset(Dataset):
     def __init__(self, input_filename, transforms, image_root,
@@ -161,10 +160,9 @@ class GridDistillDataset(Dataset):
         self.ceph_root = ceph_root
         self.use_ceph = (ceph_root != "")
         self.FILE_CLIENT = None
-        if pre_transforms:
+        if args.llava:
             self.pre_transforms = Compose([
-                CustomRandomResize(scale=(0.5, 2.0)),
-                CustomRandomCrop(size=self.transforms[0].transforms[0].max_size),
+                SimpleRandomCrop(),
                 RandomHorizontalFlip()])
         else:
             self.pre_transforms = None
@@ -194,6 +192,9 @@ class GridDistillDataset(Dataset):
             print(f"Invalid image, size {image.size}", flush=True)
             return None
 
+        if self.pre_transforms is not None:
+            image = self.pre_transforms(image)
+
         return image
 
 
@@ -201,7 +202,8 @@ class GridDistillDataset(Dataset):
         choices = []
         for m in range(1, M+1):
             for n in range((m + 1)//2, min(m*2 + 1, M+1)):
-                choices.append((m, n))
+                if (not self.args.llava) or (max(m, n) / min(m, n) <= 2):
+                    choices.append((m, n))
         self.choices = choices
 
     def __len__(self):

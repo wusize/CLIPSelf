@@ -49,6 +49,11 @@ def parse_args(args):
         default=False
     )
     parser.add_argument(
+        "--llava",
+        action="store_true",
+        default=False
+    )
+    parser.add_argument(
         "--shift-range",
         type=float,
         default=0.0
