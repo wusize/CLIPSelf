@@ -198,14 +198,14 @@ class GridDistillDataset(Dataset):
 
         return image
 
-
     def _init_choices(self, M=16):
         choices = []
         for m in range(1, M+1):
             for n in range((m + 1)//2, min(m*2 + 1, M+1)):
-                if (not self.args.llava) or (max(m, n) / min(m, n) <= 2):
+                if (not self.args.llava) or (max(m, n) / min(m, n)) <= 2:
                     choices.append((m, n))
         self.choices = choices
+        print(f"Choices: {choices}", flush=True)
 
     def __len__(self):
         return len(self.image_ids)

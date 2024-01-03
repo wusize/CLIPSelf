@@ -44,6 +44,7 @@ class CustomRandomCrop(RandomCrop):
 
         return F.crop(img, i, j, h, w)
 
+
 class SimpleRandomCrop(nn.Module):
     @staticmethod
     def get_params(img: Tensor, output_size: Tuple[int, int]) -> Tuple[int, int, int, int]:

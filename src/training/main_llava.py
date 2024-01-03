@@ -186,7 +186,7 @@ def main(args):
         is_train=False,
         mean=image_mean,
         std=image_std,
-        resize_longest_max=False,
+        resize_longest_max=True,
     )
 
     if args.distributed:
