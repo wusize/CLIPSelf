@@ -221,7 +221,8 @@ def main(args):
     start_epoch = 0
     # initialize datasets
     args.val_data = ""
-    data = get_data(args, ([preprocess_student, preprocess_teacher], None), epoch=start_epoch, tokenizer=get_tokenizer(args.model))
+    data = get_data(args, ([preprocess_student, preprocess_teacher], None),
+                    epoch=start_epoch, tokenizer=None)
     assert len(data), 'At least one train or eval dataset must be specified.'
 
     # create scheduler if train
