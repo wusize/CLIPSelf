@@ -176,6 +176,7 @@ def main(args):
     image_size = model.image_processor.crop_size['height']   # 336
     image_mean = model.image_processor.image_mean
     image_std = model.image_processor.image_std
+    args.input_size = image_size
     preprocess_student = det_image_transform(
         image_size,
         is_train=False,
